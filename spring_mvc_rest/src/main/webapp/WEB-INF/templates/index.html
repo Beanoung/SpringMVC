@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+    <head>
+        <meta charset="UTF-8">
+        <title>首页</title>
+    </head>
+    <body>
+        <h1>index.html</h1>
+        <a th:href="@{/user}">查询所有用户信息</a><br>
+        <a th:href="@{/user/1}">根据id查询用户信息</a><br>
+        <form th:action="@{/user}" method="post">
+            <input type="submit" value="新增用户信息">
+        </form><br>
+        <form th:action="@{/user}" method="post"><!-- put请求,但是html只提供get和post,因此设置过滤器,这里写post -->
+            <input type="hidden" name="_method" value="put"><!-- 必须这样写,这里写put -->
+            <input type="submit" value="修改用户信息">
+        </form><br>
+        <form th:action="@{/user/1}" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="submit" value="根据id删除用户信息">
+        </form>
+        <hr>
+        <a th:href="@{/employee}">查询所有员工信息</a>
+    </body>
+</html>
