@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.beanoung"/>
+
+    <bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="characterEncoding" value="UTF-8"/>
+        <property name="order" value="1"/>
+        <property name="templateEngine">
+            <bean class="org.thymeleaf.spring5.SpringTemplateEngine">
+                <property name="templateResolver">
+                    <bean class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+                        <property name="prefix" value="/WEB-INF/templates/"/>
+                        <property name="suffix" value=".html"/>
+                        <property name="characterEncoding" value="UTF-8"/>
+                        <property name="templateMode" value="HTML5"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <mvc:default-servlet-handler/>
+
+    <mvc:annotation-driven/>
+
+    <mvc:view-controller path="/" view-name="index"/>
+
+    <bean id="firstInterceptor2" class="com.beanoung.interceptor.FirstInterceptor"/>
+
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <!-- <bean class="com.beanoung.interceptor.FirstInterceptor"/> --><!-- 通过内部bean -->
+        <!-- <ref bean="firstInterceptor2"/> -->    <!-- 通过外部bean -->
+        <!-- <ref bean="firstInterceptor"/> -->     <!-- 通过注解+扫描 -->
+        <!-- bean和ref标签所配置的拦截器默认对DispatcherServlet处理的所有请求进行拦截 -->
+
+        <!-- 这种方式更精确,包括路径的设置 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>   <!-- "/*"表示一层目录的所有请求 -->
+            <mvc:exclude-mapping path="/abc"/>
+            <ref bean="firstInterceptor"/>
+        </mvc:interceptor>
+        <!-- 测试多个拦截器执行顺序 --><!-- 和配置的先后顺序有关(a b),pre(a b),post和after(b a) -->
+        <!-- 若某个拦截器的pre返回false,它和它之前的pre都会执行,所有的post都不执行,它之前的after要执行 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/abc"/>
+            <ref bean="secondInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 通过xml来配置异常处理 -->
+    <!-- 异常处理解析器 -->
+    <!-- <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.ArithmeticException">error</prop>
+            </props>
+        </property>
+        <property name="exceptionAttribute" value="ex"/>&lt;!&ndash; 设置异常信息的属性名,就可以在页面上获取、显示 &ndash;&gt;
+    </bean> -->
+</beans>

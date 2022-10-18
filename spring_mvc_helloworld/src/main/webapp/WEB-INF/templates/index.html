@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+    <head>
+        <meta charset="UTF-8">
+        <title>首页</title>
+    </head>
+    <body>
+        <h1>index.html</h1>
+        <a th:href="@{/hello}">测试SpringMVC</a>  <!-- 包含上下文路径 -->
+        <a href="/hello">测试绝对路径</a>           <!-- 不包含上下文路径 --><!-- /:在浏览器被解析为不包含上下文的路径 -->
+    </body>
+</html>
+
+<!-- WEB-INF/下的内容有一定的安全性,不能直接通过浏览器访问,当做请求处理,转发访问,见 HelloController.class -->
